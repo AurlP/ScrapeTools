@@ -37,8 +37,6 @@ class Cache:
     def save_error(
         self, cache_file_id: str, error_response: ErrorResponse
     ) -> None:
-        # print(error_response.json())
-        print(error_response)
         file_name = f"{ERROR_FILE_PREFIX}_{self.get_file_name(cache_file_id)}"
         with open(os.path.join(self.cache_dir, file_name), "w") as f:
             json.dump(error_response.json(), f)

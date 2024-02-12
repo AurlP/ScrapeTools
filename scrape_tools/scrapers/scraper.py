@@ -7,7 +7,7 @@ from typing import Union
 
 from ..cache import Cache
 from ..proxies import Proxy
-from ..responses import CachedResponse
+from ..responses import CachedResponse, ErrorResponse
 
 
 class Scraper:
@@ -38,7 +38,10 @@ class Scraper:
         try:
             return self.session.request(method, url, *args, **kwargs)
         except RequestException as e:
-            self.cache.save_error(cache_file_id, e)
+            error_response = ErrorResponse(
+                url, error=f"{type(e).__name__}: {str(e)}"
+            )
+            self.cache.save_error(cache_file_id, error_response)
             return None
 
     def scrape(
@@ -48,7 +51,7 @@ class Scraper:
         url: str,
         response_type: str,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Union[Response, CachedResponse, None]:
         if self.cache.should_scrap(cache_file_id):
             tries = 0
