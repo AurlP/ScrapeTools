@@ -18,7 +18,7 @@ class TorProxy(AuthProxy):
         self.control_port = control_port
 
     # needed if the ip is renewed from an other container
-    def get_container_ip(self):
+    def get_container_ip(self) -> str:
         return socket.gethostbyname(self.host)
 
     def renew_ip(self):
